@@ -1,0 +1,69 @@
+{
+  "name": "statusbar-novel-reader",
+  "displayName": "状态栏小说阅读器",
+  "description": "在 VS Code 状态栏阅读本地 TXT 和 EPUB，支持章节目录、搜索跳转、翻页和进度保存。",
+  "version": "0.1.10",
+  "publisher": "local-reader",
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "extensionKind": ["ui"],
+  "capabilities": { "untrustedWorkspaces": { "supported": true } },
+  "main": "./src/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      { "command": "statusbarNovel.open", "title": "打开 TXT / EPUB", "category": "状态栏小说" },
+      { "command": "statusbarNovel.switchBook", "title": "切换书籍", "category": "状态栏小说" },
+      { "command": "statusbarNovel.contents", "title": "章节目录", "category": "状态栏小说" },
+      { "command": "statusbarNovel.previousChapter", "title": "上一章", "category": "状态栏小说" },
+      { "command": "statusbarNovel.nextChapter", "title": "下一章", "category": "状态栏小说" },
+      { "command": "statusbarNovel.showRight", "title": "在右下角显示正文", "category": "状态栏小说" },
+      { "command": "statusbarNovel.menu", "title": "阅读菜单", "category": "状态栏小说" },
+      { "command": "statusbarNovel.next", "title": "下一段", "category": "状态栏小说" },
+      { "command": "statusbarNovel.previous", "title": "上一段", "category": "状态栏小说" },
+      { "command": "statusbarNovel.focus", "title": "进入阅读状态", "category": "状态栏小说" },
+      { "command": "statusbarNovel.leave", "title": "退出阅读并隐藏内容", "category": "状态栏小说" },
+      { "command": "statusbarNovel.keybindings", "title": "配置翻页快捷键", "category": "状态栏小说" },
+      { "command": "statusbarNovel.toggle", "title": "切换阅读 / 非阅读模式", "category": "状态栏小说" },
+      { "command": "statusbarNovel.jump", "title": "跳转阅读进度", "category": "状态栏小说" },
+      { "command": "statusbarNovel.auto", "title": "开始 / 暂停自动翻页", "category": "状态栏小说" },
+      { "command": "statusbarNovel.hover", "title": "切换悬停阅读", "category": "状态栏小说" }
+    ],
+    "keybindings": [
+      { "command": "statusbarNovel.previous", "key": "1", "when": "statusbarNovel.visible && statusBarFocused && !inputFocus" },
+      { "command": "statusbarNovel.next", "key": "2", "when": "statusbarNovel.visible && statusBarFocused && !inputFocus" },
+      { "command": "statusbarNovel.toggle", "key": "alt+r" },
+      { "command": "statusbarNovel.menu", "key": "alt+shift+m" }
+    ],
+    "configuration": {
+      "title": "状态栏小说",
+      "properties": {
+        "statusbarNovel.alignment": {
+          "type": "string", "default": "right", "enum": ["right", "left"],
+          "description": "小说在状态栏中的位置。right 显示在右下角，left 显示在左侧。其他状态栏项目可通过状态栏右键菜单隐藏。"
+        },
+        "statusbarNovel.hoverOnly": {
+          "type": "boolean", "default": false,
+          "description": "平时只显示书本图标，悬停时在 VS Code 提示框中显示正文。关闭后正文直接显示在状态栏。提示框的出现和消失延迟由 VS Code 控制。"
+        },
+        "statusbarNovel.charactersPerPage": {
+          "type": "integer", "default": 28, "minimum": 12, "maximum": 100,
+          "description": "每段最多显示的字符数，尽量在标点或换行处断开。"
+        },
+        "statusbarNovel.encoding": {
+          "type": "string", "default": "auto", "enum": ["auto", "utf-8", "gb18030", "utf-16le", "utf-16be"],
+          "description": "TXT 编码。auto 优先识别 BOM 和 UTF-8，失败后尝试 GB18030（兼容 GBK）。修改后重新打开文件生效。"
+        },
+        "statusbarNovel.autoPageSeconds": {
+          "type": "number", "default": 6, "minimum": 1, "maximum": 120,
+          "description": "自动翻页间隔（秒），仅在正文直接显示于状态栏时可用。隐藏或窗口失焦时暂停。"
+        },
+        "statusbarNovel.showProgress": {
+          "type": "boolean", "default": false,
+          "description": "在直接显示正文的模式下附加段数进度。悬停模式始终只显示图标。"
+        }
+      }
+    }
+  }
+}

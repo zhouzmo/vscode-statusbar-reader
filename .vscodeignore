@@ -1,0 +1,4 @@
+.vscode/**
+*.vsix
+scripts/**
+tests/**
